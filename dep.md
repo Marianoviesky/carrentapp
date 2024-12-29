@@ -1,0 +1,10 @@
+get: ^4.6.6
+  unicons: ^3.0.0
+  google_fonts: ^6.2.1
+  firebase_auth: ^5.3.4
+  cloud_firestore: ^5.6.0
+  tap_debouncer: ^2.2.0
+  provider: ^6.1.2
+  google_maps_flutter: ^2.10.0
+  http: ^1.2.2
+  json_serializable: ^6.9.2
