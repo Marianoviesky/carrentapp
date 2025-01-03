@@ -26,7 +26,7 @@ Row buildCategory(String text, size, isDarkMode) {
           right: size.width * 0.05,
         ),
         child: Text(
-          'View All',
+          'Tous voir',
           textAlign: TextAlign.center,
           style: GoogleFonts.poppins(
             color: isDarkMode

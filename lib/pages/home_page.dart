@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
       ),
       extendBody: true,
       extendBodyBehindAppBar: true,
-      bottomNavigationBar: buildBottomNavBar(1, size, isDarkMode),
+      bottomNavigationBar: buildBottomNavBar(0, size, isDarkMode),
       body: Center(
         child: Container(
           height: size.height,
@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: Align(
                             child: Text(
-                              'With Corporate Difference',
+                              'Louer votre voiture en un temps record',
                               textAlign: TextAlign.center,
                               style: GoogleFonts.poppins(
                                 color: isDarkMode
@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: Align(
                             child: Text(
-                              'Enjoy the fun driving in Enterprise',
+                              'Profitez du plaisir à conduire ',
                               textAlign: TextAlign.center,
                               style: GoogleFonts.poppins(
                                 color: isDarkMode
@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                                           ? Colors.white
                                           : Colors.black,
                                     ),
-                                    hintText: 'Search a car',
+                                    hintText: 'Rechercher une voiture ',
                                   ),
                                 ),
                               ),
@@ -219,7 +219,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Color(0xff3b22a1), //filters bg color
                                   ),
                                   child: Icon(
-                                    UniconsLine.sliders_v,
+                                    UniconsLine.search,
                                     color: Colors.white,
                                     size: size.height * 0.032,
                                   ),

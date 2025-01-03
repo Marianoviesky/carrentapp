@@ -6,6 +6,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unicons/unicons.dart';
 import 'package:carrentapp/pages/maps.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+
+
 
 class DetailsPage extends StatefulWidget {
   final String carImage;
@@ -41,6 +46,35 @@ class _DetailsPageState extends State<DetailsPage> {
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
   }
+
+  Future<void> rentCar({
+  required String carId,
+  required String carName,
+  required String carLocation,
+  required int carPrice,
+}) async {
+  try {
+    // Obtenir l'utilisateur actif
+    final User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      throw Exception("Aucun utilisateur actif.");
+    }
+
+    // Ajouter les données dans Firebase
+    await FirebaseFirestore.instance.collection('carrented').add({
+      'userId': user.uid,
+      'carId': carId,
+      'carName': carName,
+      'carLocation': carLocation,
+      'carPrice': carPrice,
+      'rentedAt': FieldValue.serverTimestamp(), // Enregistre l'heure de l'emprunt
+    });
+  } catch (e) {
+    throw Exception("Erreur lors de l'emprunt : $e");
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +231,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             ),
                           ),
                           Text(
-                            '/per day',
+                            '/par jour',
                             style: GoogleFonts.poppins(
                               color: isDarkMode
                                   ? Colors.white.withOpacity(0.8)
@@ -335,7 +369,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),
                     ],
                   ),
-                  buildSelectButton(size, isDarkMode),
+                  buildSelectButton(context, size, isDarkMode, this),
                 ],
               ),
             ),
@@ -407,8 +441,8 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 }
-
-Align buildSelectButton(Size size, bool isDarkMode) {
+Align buildSelectButton(
+    BuildContext context, Size size, bool isDarkMode, _DetailsPageState state) {
   return Align(
     alignment: Alignment.bottomCenter,
     child: Padding(
@@ -419,7 +453,39 @@ Align buildSelectButton(Size size, bool isDarkMode) {
         height: size.height * 0.07,
         width: size.width,
         child: InkWell(
-          onTap: () {},
+          onTap: () async {
+            try {
+              // Enregistrer les données de la voiture choisie
+              await state.rentCar(
+                carId: state.widget.carName, // Remplace par l'identifiant unique
+                carName: state.widget.carName,
+                carLocation: "Katowice Airport", // Modifier si nécessaire
+                carPrice: state.widget.carPrice,
+              );
+
+              // Afficher une notification de succès
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Emprunt réalisé avec succès!',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            } catch (e) {
+              // Afficher une notification d'erreur
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Échec de l\'emprunt : $e',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
@@ -427,7 +493,7 @@ Align buildSelectButton(Size size, bool isDarkMode) {
             ),
             child: Align(
               child: Text(
-                'Select',
+                'Louer',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.lato(
                   fontSize: size.height * 0.025,
@@ -442,3 +508,8 @@ Align buildSelectButton(Size size, bool isDarkMode) {
     ),
   );
 }
+
+
+
+
+

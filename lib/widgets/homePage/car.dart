@@ -108,7 +108,7 @@ Padding buildCar(int i, Size size, bool isDarkMode, data) {
                         ),
                       ),
                       Text(
-                        '/per day',
+                        '/par jour',
                         style: GoogleFonts.poppins(
                           color: isDarkMode
                               ? Colors.white.withOpacity(0.8)

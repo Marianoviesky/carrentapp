@@ -7,7 +7,7 @@ Widget buildMostRented(Size size, bool isDarkMode) {
   CollectionReference cars = FirebaseFirestore.instance.collection('cars');
   return Column(
     children: [
-      buildCategory('Most Rented', size, isDarkMode),
+      buildCategory('En vedette', size, isDarkMode),
       Padding(
         padding: EdgeInsets.only(
           top: size.height * 0.015,

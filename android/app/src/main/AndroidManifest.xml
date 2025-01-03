@@ -2,7 +2,9 @@
     <application
         android:label="carrentapp"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
+
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyDfuF7VaxOx9MPBThZm5XF3eP9P6YotT20"/>
         <activity
