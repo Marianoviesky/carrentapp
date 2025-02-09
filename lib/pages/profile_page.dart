@@ -7,6 +7,11 @@ import 'package:unicons/unicons.dart';
 import 'package:intl/intl.dart';
 import 'package:carrentapp/pages/home_page.dart';
 import 'package:get/get.dart';
+import'package:carrentapp/pages/ProfileAvatar.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ProfilePage extends StatefulWidget {
@@ -20,6 +25,40 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+
+  // Méthode pour sélectionner une image et la stocker localement
+  Future<void> _pickAndStoreImage() async {
+    final picker = ImagePicker();
+    final XFile? imageFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (imageFile == null) return;
+
+    File image = File(imageFile.path);
+
+    try {
+      // Obtenez le répertoire de stockage local
+      final directory = await getApplicationDocumentsDirectory();
+      final String path = directory.path;
+      final String fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final File localImage = await image.copy('$path/$fileName');
+
+      // Enregistrer le chemin de l'image dans SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('profileImagePath', localImage.path);
+
+      setState(() {}); // Mettre à jour l'interface utilisateur
+    } catch (e) {
+      print("Erreur lors de l'enregistrement de l'image localement: $e");
+    }
+  }
+
+  // Méthode pour récupérer l'image enregistrée localement
+  Future<String?> _getProfileImagePath() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('profileImagePath');
+  }
+
 
 Future<List<Map<String, dynamic>>> getRentedCars(String userId) async {
   try {
@@ -107,15 +146,30 @@ Future<List<Map<String, dynamic>>> getRentedCars(String userId) async {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: size.height * 0.03),
-              CircleAvatar(
-                radius: size.width * 0.15,
-                backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[300],
-                child: Icon(
-                  UniconsLine.user,
-                  color: isDarkMode ? Colors.white : const Color(0xff3b22a1),
-                  size: size.width * 0.2,
-                ),
-              ),
+              FutureBuilder<String?>(
+              future: _getProfileImagePath(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  return CircleAvatar(
+                    radius: size.width * 0.15,
+                    backgroundImage: FileImage(File(snapshot.data!)),
+                    backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[300],
+                  );
+                } else {
+                  return CircleAvatar(
+                    radius: size.width * 0.15,
+                    backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[300],
+                    child: Icon(
+                      UniconsLine.user,
+                      color: isDarkMode ? Colors.white : const Color(0xff3b22a1),
+                      size: size.width * 0.2,
+                    ),
+                  );
+                }
+              },
+            ),
               SizedBox(height: size.height * 0.03),
               Text(
                 displayName,
@@ -125,6 +179,11 @@ Future<List<Map<String, dynamic>>> getRentedCars(String userId) async {
                   color: isDarkMode ? Colors.white : const Color(0xff3b22a1),
                 ),
               ),
+               SizedBox(height: size.height * 0.05),
+            ElevatedButton(
+              onPressed: _pickAndStoreImage,
+              child: Text("Changer la photo de profil"),
+            ),
               SizedBox(height: size.height * 0.01),
               Text(
                 email,
