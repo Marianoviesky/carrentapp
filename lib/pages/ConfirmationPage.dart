@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 
 class ConfirmationPage extends StatelessWidget {
+  final String carId;
   final String carName;
   final int carPrice;
   final String carLocation;
@@ -13,6 +14,7 @@ class ConfirmationPage extends StatelessWidget {
   final String paymentMethod;
 
   ConfirmationPage({
+    required this.carId,
     required this.carName,
     required this.carPrice,
     required this.carLocation,
@@ -98,7 +100,7 @@ class ConfirmationPage extends StatelessWidget {
                     ListTile(
                       leading: Icon(Icons.attach_money, color: Colors.green),
                       title: Text("Prix par jour"),
-                      subtitle: Text("\$$carPrice", style: TextStyle(fontSize: 16)),
+                      subtitle: Text("$carPrice FCFA", style: TextStyle(fontSize: 16)),
                     ),
                     ListTile(
                       leading: Icon(Icons.location_on, color: Colors.red),
@@ -125,7 +127,7 @@ class ConfirmationPage extends StatelessWidget {
                         ),
                       ),
                       trailing: Text(
-                        "\$$totalPrice",
+                        "$totalPrice FCFA",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -168,7 +170,7 @@ class ConfirmationPage extends StatelessWidget {
     try {
       // Appel à rentCar avec les informations passées dans le constructeur
       await rentCar(
-        carId: carName, // Utiliser carName comme carId (ou un autre identifiant unique si disponible)
+        carId: carId, // Utiliser carName comme carId (ou un autre identifiant unique si disponible)
         carName: carName,
         carLocation: carLocation,
         carPrice: carPrice,
@@ -188,7 +190,7 @@ class ConfirmationPage extends StatelessWidget {
     //    Navigator.of(context).pushReplacement(
     //   MaterialPageRoute(builder: (context) => ProfilePage()),
     // );
-    Get.off(()=>ProfilePage());
+    Get.offAll(()=>ProfilePage());
     } catch (e) {
       // Affichage de l'échec de l'emprunt
       ScaffoldMessenger.of(context).showSnackBar(

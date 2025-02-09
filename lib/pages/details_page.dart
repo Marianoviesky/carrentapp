@@ -384,7 +384,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                         ),
                                       ),
                                       Text(
-                                        'Wolności 90, 42-625 Pyrzowice',
+                                        "Appuyez pour voir l'emplacement",
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.poppins(
                                           color: isDarkMode
@@ -537,9 +537,10 @@ Future<void> showConfirmationDialog(
                 context,
                 MaterialPageRoute(
                   builder: (context) => PaymentPage(
+                    carId:state.widget.documentId,
                     carName: state.widget.carName,
                     carPrice: state.widget.carPrice,
-                    carLocation: "Katowice Airport",
+                    carLocation: state.widget.companyName,
                   ),
                 ),
               );

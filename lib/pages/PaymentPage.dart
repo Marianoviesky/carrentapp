@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'ConfirmationPage.dart';
 
 class PaymentPage extends StatelessWidget {
+  final String carId;
   final String carName;
   final int carPrice;
   final String carLocation;
 
   PaymentPage({
+    required this.carId,
     required this.carName,
     required this.carPrice,
     required this.carLocation,
@@ -22,6 +24,7 @@ class PaymentPage extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: PaymentForm(
+          carId: carId,
           carName: carName,
           carPrice: carPrice,
           carLocation: carLocation,
@@ -32,11 +35,13 @@ class PaymentPage extends StatelessWidget {
 }
 
 class PaymentForm extends StatefulWidget {
+  final String carId;
   final String carName;
   final int carPrice;
   final String carLocation;
 
   PaymentForm({
+    required this.carId,
     required this.carName,
     required this.carPrice,
     required this.carLocation,
@@ -76,7 +81,7 @@ class _PaymentFormState extends State<PaymentForm> {
                   ),
                   ListTile(
                     leading: Icon(Icons.attach_money, color: Colors.green),
-                    title: Text("Prix: \$${widget.carPrice}"),
+                    title: Text("Prix: ${widget.carPrice} FCFA"),
                   ),
                   ListTile(
                     leading: Icon(Icons.location_on, color: Colors.red),
@@ -148,6 +153,7 @@ class _PaymentFormState extends State<PaymentForm> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ConfirmationPage(
+                       carId: widget.carId,
                         carName: widget.carName,
                         carPrice: widget.carPrice,
                         carLocation: widget.carLocation,

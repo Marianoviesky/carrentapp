@@ -336,8 +336,8 @@ class _AuthPageState extends State<AuthPage> {
                                   Colors.black,
                                 ]
                               : const [
-                                  Color(0xff92A3FD),
-                                  Color(0xff9DCEFF),
+                                  Color(0xFF3B22A1),
+                                  Color(0xFF3B22A1)
                                 ],
                           textColors: const [
                             Colors.white,
@@ -566,7 +566,7 @@ class _AuthPageState extends State<AuthPage> {
                                             ..shader = const LinearGradient(
                                               colors: <Color>[
                                                 Color(0xffEEA4CE),
-                                                Color(0xffC58BF2),
+                                                Color(0xFF3B22A1),
                                               ],
                                             ).createShader(
                                               const Rect.fromLTWH(
@@ -586,7 +586,7 @@ class _AuthPageState extends State<AuthPage> {
                                             ..shader = const LinearGradient(
                                               colors: <Color>[
                                                 Color(0xffEEA4CE),
-                                                Color(0xffC58BF2),
+                                                Color(0xFF3B22A1),
                                               ],
                                             ).createShader(
                                               const Rect.fromLTWH(

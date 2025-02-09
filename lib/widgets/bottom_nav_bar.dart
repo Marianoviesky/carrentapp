@@ -22,28 +22,16 @@ Widget buildBottomNavBar(BuildContext context,int currIndex, Size size, bool isD
    onTap: (value) {
   if (value != currIndex) {
     if (value == 0) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
+      Get.offAll(const HomePage());
     }
     if (value == 1) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => ExplorerPage()),
-      );
+     Get.offAll(ExplorerPage());
     }
     if (value == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SearchPage()),
-      );
+     Get.off(SearchPage());
     }
     if (value == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
-      );
+      Get.off(const ProfilePage());
     }
   }
 },

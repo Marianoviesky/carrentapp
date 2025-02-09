@@ -131,7 +131,7 @@ class _SearchPageState extends State<SearchPage> {
                   padding: EdgeInsets.zero,
                   itemCount: filteredCars.length,
                   itemBuilder: (context, i) {
-                    return buildCar(i, size, isDarkMode, data);
+                    return buildCar(i, size, isDarkMode, filteredCars);
                   },
                 );
               },
@@ -144,7 +144,7 @@ class _SearchPageState extends State<SearchPage> {
 
 
 
-Padding buildCar(int i, Size size, bool isDarkMode, data) {
+Padding buildCar(int i, Size size, bool isDarkMode, List<QueryDocumentSnapshot> data) {
   return Padding(
     padding: EdgeInsets.only(
       right: size.width * 0.03,
@@ -169,17 +169,17 @@ Padding buildCar(int i, Size size, bool isDarkMode, data) {
             child: InkWell(
               onTap: () {
                 Get.to(DetailsPage(
-                  documentId: data.docs[i].id,
-                  companyName:data.docs[i]['companyName'],
-                  carImage: data.docs[i]['carImage'],
-                  carClass: data.docs[i]['carClass'],
-                  carName: data.docs[i]['carName'],
-                  carPower: data.docs[i]['carPower'],
-                  people: data.docs[i]['people'],
-                  bags: data.docs[i]['bags'],
-                  carPrice: data.docs[i]['carPrice'],
-                  carRating: data.docs[i]['carRating'],
-                  isRotated: data.docs[i]['isRotated'],
+                  documentId: data[i].id,
+                  companyName:data[i]['companyName'],
+                  carImage: data[i]['carImage'],
+                  carClass: data[i]['carClass'],
+                  carName: data[i]['carName'],
+                  carPower: data[i]['carPower'],
+                  people: data[i]['people'],
+                  bags: data[i]['bags'],
+                  carPrice: data[i]['carPrice'],
+                  carRating: data[i]['carRating'],
+                  isRotated: data[i]['isRotated'],
                 ));
               },
               child: Column(
@@ -191,9 +191,9 @@ Padding buildCar(int i, Size size, bool isDarkMode, data) {
                     ),
                     child: Align(
                       alignment: Alignment.topCenter,
-                      child: data.docs[i]['isRotated']
+                      child: data[i]['isRotated']
                           ? Image.network(
-                              data.docs[i]['carImage'],
+                              data[i]['carImage'],
                               height: size.width * 0.35,//0.25
                               width: size.width * 0.65,//0.5
                               fit: BoxFit.contain,
@@ -202,7 +202,7 @@ Padding buildCar(int i, Size size, bool isDarkMode, data) {
                               alignment: Alignment.center,
                               transform: Matrix4.rotationY(pi),
                               child: Image.network(
-                                data.docs[i]['carImage'],
+                                data[i]['carImage'],
                                 height: size.width * 0.25,
                                 width: size.width * 0.5,
                                 fit: BoxFit.contain,
@@ -215,7 +215,7 @@ Padding buildCar(int i, Size size, bool isDarkMode, data) {
                       top: size.height * 0.01,
                     ),
                     child: Text(
-                      data.docs[i]['carClass'],
+                      data[i]['carClass'],
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         color:
@@ -226,7 +226,7 @@ Padding buildCar(int i, Size size, bool isDarkMode, data) {
                     ),
                   ),
                   Text(
-                    data.docs[i]['carName'],
+                    data[i]['carName'],
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       color:
@@ -238,7 +238,7 @@ Padding buildCar(int i, Size size, bool isDarkMode, data) {
                   Row(
                     children: [
                       Text(
-                        '${data.docs[i]['carPrice']}\FCFA',
+                        '${data[i]['carPrice']}\FCFA',
                         style: GoogleFonts.poppins(
                           color: isDarkMode
                               ? Colors.white
