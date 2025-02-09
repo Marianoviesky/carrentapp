@@ -37,6 +37,73 @@ class _AuthPageState extends State<AuthPage> {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isDarkMode = brightness == Brightness.dark;
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(40.0), //appbar size
+        child: AppBar(
+          bottomOpacity: 0.0,
+          elevation: 0.0,
+          shadowColor: Colors.transparent,
+          backgroundColor: isDarkMode
+              ? const Color(0xff06090d)
+              : const Color(0xfff8f8f8), //appbar bg color
+          leading: Padding(
+            padding: EdgeInsets.only(
+              left: size.width * 0.05,
+            ),
+            
+            child: SizedBox(
+              height: size.width * 0.1,
+              width: size.width * 0.1,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDarkMode
+                      ? const Color(0xff070606)
+                      : Colors.white, //icon bg color
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(
+                      10,
+                    ),
+                  ),
+                ),
+               
+              ),
+            ),
+          ),
+          automaticallyImplyLeading: false,
+          titleSpacing: 0,
+          leadingWidth: size.width * 0.15,
+          title: Image.asset(
+            isDarkMode
+                ? 'assets/icons/first.png'
+                : 'assets/icons/second.png', //logo
+            height: size.height * 0.06,
+            width: size.width * 0.35,
+          ),
+          centerTitle: true,
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(
+                right: size.width * 0.05,
+              ),
+              child: SizedBox(
+                height: size.width * 0.1,
+                width: size.width * 0.1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: isDarkMode
+                        ? const Color(0xff070606)
+                        : Colors.white, //icon bg color
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       body: Center(
         child: Container(
           height: size.height,
@@ -56,23 +123,13 @@ class _AuthPageState extends State<AuthPage> {
                           vertical: size.height * 0.01,
                         ),
                       ),
-                      Align(
-                        child: Text(
-                          'Hey there,',
-                          style: GoogleFonts.poppins(
-                            color: isDarkMode
-                                ? Colors.white
-                                : const Color(0xff1D1617),
-                            fontSize: size.height * 0.02,
-                          ),
-                        ),
-                      ),
+                     
                       Padding(
                         padding: EdgeInsets.only(top: size.height * 0.015),
                         child: Align(
                           child: register
                               ? Text(
-                                  'Create an Account',
+                                  'Créer un compte',
                                   style: GoogleFonts.poppins(
                                     color: isDarkMode
                                         ? Colors.white
@@ -82,7 +139,7 @@ class _AuthPageState extends State<AuthPage> {
                                   ),
                                 )
                               : Text(
-                                  'Welcome Back',
+                                  'Content de vous revoir 😊',
                                   style: GoogleFonts.poppins(
                                     color: isDarkMode
                                         ? Colors.white
@@ -98,14 +155,14 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                       register
                           ? buildTextField(
-                              "Name",
+                              "Nom",
                               Icons.person_outlined,
                               false,
                               size,
                               (valuename) {
                                 if (valuename.length <= 2) {
                                   buildSnackError(
-                                    'Invalid name',
+                                    'Nom invalide',
                                     context,
                                     size,
                                   );
@@ -127,7 +184,7 @@ class _AuthPageState extends State<AuthPage> {
                           (valuemail) {
                             if (valuemail.length < 5) {
                               buildSnackError(
-                                'Invalid email',
+                                'Email invalide',
                                 context,
                                 size,
                               );
@@ -137,7 +194,7 @@ class _AuthPageState extends State<AuthPage> {
                                     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+.[a-zA-Z]+")
                                 .hasMatch(valuemail)) {
                               buildSnackError(
-                                'Invalid email',
+                                'Email invalide',
                                 context,
                                 size,
                               );
@@ -152,14 +209,14 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                       Form(
                         child: buildTextField(
-                          "Passsword",
+                          "Mot de passe",
                           Icons.lock_outline,
                           true,
                           size,
                           (valuepassword) {
                             if (valuepassword.length < 6) {
                               buildSnackError(
-                                'Invalid password',
+                                'Mot de passe invalide',
                                 context,
                                 size,
                               );
@@ -175,14 +232,14 @@ class _AuthPageState extends State<AuthPage> {
                       Form(
                         child: register
                             ? buildTextField(
-                                "Confirm Passsword",
+                                "Confirmer Mot de passe",
                                 Icons.lock_outline,
                                 true,
                                 size,
                                 (valuepassword) {
                                   if (valuepassword != textfieldsStrings[2]) {
                                     buildSnackError(
-                                      'Passwords must match',
+                                      'Les mots de passes doivent ètre conformes',
                                       context,
                                       size,
                                     );
@@ -209,7 +266,7 @@ class _AuthPageState extends State<AuthPage> {
                                     children: [
                                       TextSpan(
                                         text:
-                                            "By creating an account, you agree to our ",
+                                            "En créant un compte, vous acceptez nos ",
                                         style: TextStyle(
                                           color: const Color(0xffADA4A5),
                                           fontSize: size.height * 0.015,
@@ -219,7 +276,7 @@ class _AuthPageState extends State<AuthPage> {
                                         child: InkWell(
                                           onTap: () {},
                                           child: Text(
-                                            "Terms of Use and Privacy Notice",
+                                            "Termes et conditions d'utilisation",
                                             style: TextStyle(
                                               color: const Color(0xffADA4A5),
                                               decoration:
@@ -253,7 +310,7 @@ class _AuthPageState extends State<AuthPage> {
                                   );
                                 },
                                 child: Text(
-                                  "Forgot your password?",
+                                  "Mot de passe oublié?",
                                   style: TextStyle(
                                     color: const Color(0xffADA4A5),
                                     decoration: TextDecoration.underline,
@@ -269,7 +326,7 @@ class _AuthPageState extends State<AuthPage> {
                             : EdgeInsets.only(top: size.height * 0.085),
                         child: ButtonWidget(
                           cooldown: const Duration(seconds: 5),
-                          text: register ? "Register" : "Login",
+                          text: register ? "S'inscrire" : "Se connecter",
                           height: size.height * 0.07,
                           width: size.width * 0.9,
                           borderRadius: 15,
@@ -295,7 +352,7 @@ class _AuthPageState extends State<AuthPage> {
                                         .validate()) {
                                       if (checkedValue == false) {
                                         buildSnackError(
-                                            'Accept our Privacy Policy and Term Of Use',
+                                            "Acceptez notre Politique et Termes d'utilisation ",
                                             context,
                                             size);
                                       } else {
@@ -311,56 +368,56 @@ class _AuthPageState extends State<AuthPage> {
                                           if (authEx.code ==
                                               "insufficient-permission") {
                                             buildSnackError(
-                                              "You don't have enough permission",
+                                              "Vous n'avez pas toutes les permissions",
                                               context,
                                               size,
                                             );
                                           } else if (authEx.code ==
                                               "email-already-in-use") {
                                             buildSnackError(
-                                              "This email adress is already exist",
+                                              "Cet email existe déjà",
                                               context,
                                               size,
                                             );
                                           } else if (authEx.code ==
                                               "internal-error") {
                                             buildSnackError(
-                                              "Server error, try again later!",
+                                              "Erreur du serveur ,veuillez réessayer plus tard!",
                                               context,
                                               size,
                                             );
                                           } else if (authEx.code ==
                                               "invalid-argument") {
                                             buildSnackError(
-                                              "Invalid login or password",
+                                              "Mot de passe ou email invalide",
                                               context,
                                               size,
                                             );
                                           } else if (authEx.code ==
                                               "invalid-credential") {
                                             buildSnackError(
-                                              "Something went wrong! (invalid-credential)",
+                                              "Oups, une erreur s'est produite! (invalid-credential)",
                                               context,
                                               size,
                                             );
                                           } else if (authEx.code ==
                                               "invalid-email") {
                                             buildSnackError(
-                                              "Invalid email adress",
+                                              "Email invalide",
                                               context,
                                               size,
                                             );
                                           } else if (authEx.code ==
                                               "invalid-password") {
                                             buildSnackError(
-                                              "Invalid password",
+                                              "Mot de passe invalide",
                                               context,
                                               size,
                                             );
                                           } else if (authEx.code ==
                                               "email-already-exists") {
                                             buildSnackError(
-                                              "This email adress is already exist",
+                                              "Cet email existe déjà",
                                               context,
                                               size,
                                             );
@@ -374,20 +431,20 @@ class _AuthPageState extends State<AuthPage> {
                                           } else if (authEx.code ==
                                               "invalid-uid") {
                                             buildSnackError(
-                                              "Something went wrong, try again",
+                                              "Oups, une erreur s'est produite, veuillez réessayer",
                                               context,
                                               size,
                                             );
                                           } else if (authEx.code ==
                                               "uid-already-exists") {
                                             buildSnackError(
-                                              "Something went wrong, try again",
+                                              "Oups, une erreur s'est produite, veuillez réessayer",
                                               context,
                                               size,
                                             );
                                           } else {
                                             buildSnackError(
-                                              "Something went wrong, check your connection",
+                                              "Oups, une erreur s'est produite, veuillez vérifier votre connection",
                                               context,
                                               size,
                                             );
@@ -410,54 +467,54 @@ class _AuthPageState extends State<AuthPage> {
                                   } on FirebaseAuthException catch (authEx) {
                                     if (authEx.code == "user-not-found") {
                                       buildSnackError(
-                                        "This account doesn't exist",
+                                        "Ce compte n'existe pas",
                                         context,
                                         size,
                                       );
                                     } else if (authEx.code ==
                                         "insufficient-permission") {
                                       buildSnackError(
-                                        "You don't have enough permission",
+                                        "Vous ne disposez pas des permissions réquises",
                                         context,
                                         size,
                                       );
                                     } else if (authEx.code ==
                                         "internal-error") {
                                       buildSnackError(
-                                        "Server error, try again later!",
+                                        "Erreur du serveur, veuillez réessayer plus tard!",
                                         context,
                                         size,
                                       );
                                     } else if (authEx.code ==
                                         "invalid-argument") {
                                       buildSnackError(
-                                        "Invalid login or password",
+                                        "Mot de passe ou email invalid",
                                         context,
                                         size,
                                       );
                                     } else if (authEx.code ==
                                         "invalid-credential") {
                                       buildSnackError(
-                                        "Something went wrong! (invalid-credential)",
+                                        "Oups une erreur s'est produite! (invalid-credential)",
                                         context,
                                         size,
                                       );
                                     } else if (authEx.code == "invalid-email") {
                                       buildSnackError(
-                                        "Invalid email adress",
+                                        "Email invalide",
                                         context,
                                         size,
                                       );
                                     } else if (authEx.code ==
                                         "invalid-password") {
                                       buildSnackError(
-                                        "Invalid password",
+                                        "Mot de passe invalide",
                                         context,
                                         size,
                                       );
                                     } else {
                                       buildSnackError(
-                                        "Something went wrong, check your connection",
+                                        "Oups une erreur s'est produite ,veuillez vérifier votre connection",
                                         context,
                                         size,
                                       );
@@ -483,8 +540,8 @@ class _AuthPageState extends State<AuthPage> {
                           children: [
                             TextSpan(
                               text: register
-                                  ? "Already have an account? "
-                                  : "Don’t have an account yet? ",
+                                  ? "Vous avez déjà un compte? "
+                                  : "Pas de compte? ",
                               style: TextStyle(
                                 color: isDarkMode
                                     ? Colors.white
@@ -503,7 +560,7 @@ class _AuthPageState extends State<AuthPage> {
                                 }),
                                 child: register
                                     ? Text(
-                                        "Login",
+                                        "Se connecter",
                                         style: TextStyle(
                                           foreground: Paint()
                                             ..shader = const LinearGradient(
@@ -523,7 +580,7 @@ class _AuthPageState extends State<AuthPage> {
                                         ),
                                       )
                                     : Text(
-                                        "Register",
+                                        "S'inscrire",
                                         style: TextStyle(
                                           foreground: Paint()
                                             ..shader = const LinearGradient(

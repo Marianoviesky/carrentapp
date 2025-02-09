@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:carrentapp/pages/searchPage.dart';
+import 'package:get/get.dart';
 
-Padding buildBrandLogo(Widget image, Size size, bool isDarkMode) {
+Padding buildBrandLogo(Widget image, Size size, bool isDarkMode,String name) {
   return Padding(
     padding: EdgeInsets.symmetric(
       horizontal: size.width * 0.03,
     ),
+     child: GestureDetector(
+    onTap: () {
+      String searchText = name;
+      if (searchText.isNotEmpty) {
+        Get.to(() => SearchPage(), arguments: {'query': searchText});
+      }
+    },
     child: SizedBox(
       height: size.width * 0.18,
       width: size.width * 0.18,
@@ -22,5 +31,6 @@ Padding buildBrandLogo(Widget image, Size size, bool isDarkMode) {
         ),
       ),
     ),
+     ),
   );
 }

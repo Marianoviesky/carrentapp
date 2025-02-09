@@ -5,17 +5,17 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:unicons/unicons.dart';
 
-class Maps extends StatefulWidget {
-  const Maps({Key? key}) : super(key: key);
+class Fullscreenmap extends StatefulWidget {
+  final LatLng carLocation;
+
+  const Fullscreenmap({Key? key, required this.carLocation}) : super(key: key);
 
   @override
-  _MapsState createState() => _MapsState();
+  _FullscreenmapState createState() => _FullscreenmapState();
 }
 
-class _MapsState extends State<Maps> {
+class _FullscreenmapState extends State<Fullscreenmap> {
   final Completer<GoogleMapController> _controller = Completer();
-
-  static const LatLng _center = LatLng(6.376, 2.391);
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
@@ -24,19 +24,24 @@ class _MapsState extends State<Maps> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    var brightness = MediaQuery.of(context).platformBrightness;
-    bool isDarkMode = brightness == Brightness.dark;
+
     return Scaffold(
       body: Stack(
-        
         children: [
           GoogleMap(
             mapType: MapType.hybrid,
             onMapCreated: _onMapCreated,
-            initialCameraPosition: const CameraPosition(
-              target: _center,
+            initialCameraPosition: CameraPosition(
+              target: widget.carLocation, // Utilisation de la position de la voiture
               zoom: 14.0,
             ),
+            markers: {
+              Marker(
+                markerId: MarkerId('carLocation'),
+                position: widget.carLocation,
+                infoWindow: InfoWindow(title: "Localisation actuelle"),
+              ),
+            },
           ),
           Padding(
             padding: EdgeInsets.only(
@@ -48,14 +53,12 @@ class _MapsState extends State<Maps> {
               width: size.width * 0.1,
               child: InkWell(
                 onTap: () {
-                  Get.back(); //go back to details page
+                  Get.back(); // Retourner à la page précédente
                 },
                 child: Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   child: Icon(
                     UniconsLine.multiply,

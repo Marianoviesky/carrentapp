@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
+import 'package:google_fonts/google_fonts.dart';
+import 'package:carrentapp/widgets/bottom_nav_bar.dart';
 class Page1 extends StatelessWidget {
   const Page1({super.key});
 
@@ -53,24 +56,71 @@ class Page extends StatefulWidget {
 
 class _PageState extends State<Page> {
   FirebaseFirestore db = FirebaseFirestore.instance;
+  
   int _counter = 0;
 
-  void _incrementCounter() {
-    final car = {
-      "bags": "1-2",
-      "carClass": "Luxury",
-      "carImage": "https://i.postimg.cc/WzM9cDG3/purepng-com-bugatti-chiron-blue-carcarvehicletransportbugatti-961524662978xsltd.png",
-      "carName": "Bugatti Chiron",
-      "carPower": 1500,
-      "carPrice": 3000,
-      "carRating": "4.9",
-      "isRotated": true,
-      "people": "1-2"
-};
-
-
-    db.collection("cars").add(car).then((DocumentReference doc)=>print("Car id :  ${doc.id}"));
+void _incrementCounter() {
+  int generateRandomSixDigitNumber() {
+    Random random = Random();
+    return 100000 + random.nextInt(900000); // Génère un nombre entre 100000 et 999999
   }
+
+  // Liste des entreprises avec leurs coordonnées
+  List<Map<String, dynamic>> companies = [
+    {
+      "name": "SANKO BENIN",
+      "latitude": 6.365,
+      "longitude": 2.421,
+    },
+    {
+      "name": "AFRIQUE SERVICES TRANSPORT & TOURISME",
+      "latitude": 6.370,
+      "longitude": 2.435,
+    },
+    {
+      "name": "GROUPE AGRI EX",
+      "latitude": 6.415,
+      "longitude": 2.440,
+    },
+    {
+      "name": "HCF LOGISTICS SARL",
+      "latitude": 6.355,
+      "longitude": 2.428,
+    },
+    {
+      "name": "3Click Car Hire",
+      "latitude": 6.362,
+      "longitude": 2.422,
+    },
+  ];
+
+  // Sélection aléatoire d'une entreprise
+  Map<String, dynamic> selectedCompany =
+      companies[Random().nextInt(companies.length)];
+
+  final car = {
+    "idtf": generateRandomSixDigitNumber(),
+    "bags": "1-2",
+    "carClass": "Luxe",
+    "carImage":
+        "https://i.postimg.cc/dtc8Yv6y/pngwing-com-7.png",
+    "carName": "BMW M2",
+    "carPower": 2300,
+    "carPrice": 22000,
+    "carRating": "4.6",
+    "isRotated": true,
+    "people": "1-2",
+    "companyName": selectedCompany["name"], // Nom de l'entreprise
+    "latitude": selectedCompany["latitude"], // Latitude
+    "longitude": selectedCompany["longitude"], // Longitude
+    "position": GeoPoint(selectedCompany["latitude"], selectedCompany["longitude"]),
+  };
+
+  FirebaseFirestore.instance
+      .collection("cars")
+      .add(car)
+      .then((DocumentReference doc) => print("Car id : ${doc.id}"));
+}
 
   @override
   Widget build(BuildContext context) {
@@ -80,16 +130,27 @@ class _PageState extends State<Page> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
+    
+    Size size = MediaQuery.of(context).size;
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(
+          "Explorer",
+          style: GoogleFonts.poppins(
+            color: isDarkMode ? Colors.white : const Color(0xff3b22a1),
+          ),
+        ),
+        backgroundColor: isDarkMode
+            ? const Color(0xff06090d)
+            : const Color(0xfff8f8f8),
+        elevation: 0,
+        centerTitle: true,
+      
       ),
+      bottomNavigationBar: buildBottomNavBar(1, size, isDarkMode),
+
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.

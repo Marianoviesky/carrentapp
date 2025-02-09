@@ -1,3 +1,4 @@
+import 'package:carrentapp/pages/explorer_Page.dart';
 import 'package:carrentapp/widgets/homePage/car.dart';
 import 'package:carrentapp/widgets/homePage/category.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +8,7 @@ Widget buildMostRented(Size size, bool isDarkMode) {
   CollectionReference cars = FirebaseFirestore.instance.collection('cars');
   return Column(
     children: [
-      buildCategory('En vedette', size, isDarkMode),
+      buildCategory('En vedette', size, isDarkMode,ExplorerPage()),
       Padding(
         padding: EdgeInsets.only(
           top: size.height * 0.015,
@@ -21,7 +22,7 @@ Widget buildMostRented(Size size, bool isDarkMode) {
             AsyncSnapshot<QuerySnapshot> snapshot,
           ) {
             if (snapshot.hasError) {
-              return const Text("Something went wrong");
+              return const Text("Une erreur s'est produite");
             }
 
             if (snapshot.connectionState == ConnectionState.done) {

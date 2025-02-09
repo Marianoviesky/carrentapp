@@ -1,3 +1,4 @@
+import 'package:carrentapp/pages/searchPage.dart';
 import 'package:carrentapp/widgets/homePage/brand_logo.dart';
 import 'package:carrentapp/widgets/homePage/category.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 Column buildTopBrands(Size size, bool isDarkMode) {
   return Column(
     children: [
-      buildCategory('Top Marques', size, isDarkMode),
+      buildCategory('Top Marques', size, isDarkMode,SearchPage()),
       Padding(
         padding: EdgeInsets.only(top: size.height * 0.015),
         child: Row(
@@ -20,6 +21,7 @@ Column buildTopBrands(Size size, bool isDarkMode) {
               ),
               size,
               isDarkMode,
+              "hyundrai"
             ),
             buildBrandLogo(
               Image.asset(
@@ -30,6 +32,7 @@ Column buildTopBrands(Size size, bool isDarkMode) {
               ),
               size,
               isDarkMode,
+              "volkswagen"
             ),
             buildBrandLogo(
               Image.asset(
@@ -40,6 +43,7 @@ Column buildTopBrands(Size size, bool isDarkMode) {
               ),
               size,
               isDarkMode,
+              "toyota"
             ),
             buildBrandLogo(
               Image.asset(
@@ -50,6 +54,7 @@ Column buildTopBrands(Size size, bool isDarkMode) {
               ),
               size,
               isDarkMode,
+              "bmw"
             ),
           ],
         ),

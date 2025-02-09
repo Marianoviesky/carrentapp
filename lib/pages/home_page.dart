@@ -1,10 +1,10 @@
 import 'package:carrentapp/widgets/bottom_nav_bar.dart';
-
+import 'package:get/get.dart';
 import 'package:carrentapp/widgets/homePage/most_rented.dart';
 import 'package:carrentapp/widgets/homePage/top_brands.dart';
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
+import 'package:carrentapp/pages/searchPage.dart';
 import 'package:unicons/unicons.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,6 +18,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size; //check the size of device
+    TextEditingController searchController = TextEditingController();
+
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isDarkMode = brightness ==
         Brightness.dark; //check if device is in dark or light mode
@@ -36,6 +38,7 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.only(
               left: size.width * 0.05,
             ),
+            
             child: SizedBox(
               height: size.width * 0.1,
               width: size.width * 0.1,
@@ -50,13 +53,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                child: Icon(
-                  UniconsLine.bars,
-                  color: isDarkMode
-                      ? Colors.white
-                      : const Color(0xff3b22a1), //icon bg color
-                  size: size.height * 0.025,
-                ),
+                
               ),
             ),
           ),
@@ -65,8 +62,8 @@ class _HomePageState extends State<HomePage> {
           leadingWidth: size.width * 0.15,
           title: Image.asset(
             isDarkMode
-                ? 'assets/icons/SobGOGlight.png'
-                : 'assets/icons/SobGOGdark.png', //logo
+                ? 'assets/icons/first.png'
+                : 'assets/icons/second.png', //logo
             height: size.height * 0.06,
             width: size.width * 0.35,
           ),
@@ -88,11 +85,7 @@ class _HomePageState extends State<HomePage> {
                       Radius.circular(10),
                     ),
                   ),
-                  child: Icon(
-                    UniconsLine.search,
-                    color: isDarkMode ? Colors.white : const Color(0xff3b22a1),
-                    size: size.height * 0.025,
-                  ),
+                 
                 ),
               ),
             ),
@@ -179,6 +172,7 @@ class _HomePageState extends State<HomePage> {
                                 height: size.height * 0.06,
                                 child: TextField(
                                   //searchbar
+                                  controller: searchController,
                                   style: GoogleFonts.poppins(
                                     color: isDarkMode
                                         ? Colors.white
@@ -207,6 +201,13 @@ class _HomePageState extends State<HomePage> {
                                 padding: EdgeInsets.only(
                                   left: size.width * 0.025,
                                 ),
+                                child: GestureDetector(
+                                    onTap: () {
+                                      String searchText = searchController.text.trim();
+                                      if (searchText.isNotEmpty) {
+                                        Get.to(() => SearchPage(), arguments: {'query': searchText});
+                                      }
+                                    },
                                 child: Container(
                                   height: size.height * 0.06,
                                   width: size.width * 0.14,
@@ -224,6 +225,7 @@ class _HomePageState extends State<HomePage> {
                                     size: size.height * 0.032,
                                   ),
                                 ),
+                              ),
                               ),
                             ],
                           ),

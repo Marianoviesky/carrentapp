@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unicons/unicons.dart';
-import 'package:carrentapp/pages/maps.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-
+import 'package:carrentapp/pages/PaymentPage.dart';
+import 'package:carrentapp/pages/FullScreenMap.dart';
 
 
 class DetailsPage extends StatefulWidget {
+  final String companyName;
   final String carImage;
   final String carClass;
   final String carName;
@@ -22,9 +22,12 @@ class DetailsPage extends StatefulWidget {
   final int carPrice;
   final String carRating;
   final bool isRotated;
+  final String documentId;
 
   const DetailsPage({
     Key? key,
+    required this.companyName,
+    required this.documentId,
     required this.carImage,
     required this.carClass,
     required this.carName,
@@ -41,11 +44,18 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  final Completer<GoogleMapController> _controller = Completer();
-  static const LatLng _center = LatLng(50.470685, 19.070234);
-  void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
-  }
+  // final Completer<GoogleMapController> _controller = Completer();
+  // static const LatLng _center = LatLng(50.470685, 19.070234);
+  // void _onMapCreated(GoogleMapController controller) {
+  //   _controller.complete(controller);
+  // }
+
+
+//essaie
+   GoogleMapController? mapController;
+  LatLng _carLocation = const LatLng(0, 0); // Valeur par défaut
+  bool _isLoading = true;
+
 
   Future<void> rentCar({
   required String carId,
@@ -74,8 +84,43 @@ class _DetailsPageState extends State<DetailsPage> {
     throw Exception("Erreur lors de l'emprunt : $e");
   }
 }
+//essaie
 
+ Future<void> _fetchCarLocation() async {
+    try {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('cars')
+          .doc(widget.documentId)
+          .get();
 
+      if (doc.exists) {
+        double lat = doc['latitude'];
+        double lng = doc['longitude'];
+
+        setState(() {
+          _carLocation = LatLng(lat, lng);
+          _isLoading = false;
+        });
+
+        if (mapController != null) {
+          mapController!.animateCamera(CameraUpdate.newLatLng(_carLocation));
+        }
+      }
+    } catch (e) {
+      print("Erreur lors de la récupération des coordonnées: $e");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+//essaie
+@override
+  void initState() {
+    super.initState();
+    _fetchCarLocation();
+  }
+
+//
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size; //check the size of device
@@ -128,8 +173,8 @@ class _DetailsPageState extends State<DetailsPage> {
           leadingWidth: size.width * 0.15,
           title: Image.asset(
             isDarkMode
-                ? 'assets/icons/SobGOGlight.png'
-                : 'assets/icons/SobGOGdark.png',
+                ? 'assets/icons/first.png'
+                : 'assets/icons/second.png',
             height: size.height * 0.06,
             width: size.width * 0.35,
           ),
@@ -138,7 +183,9 @@ class _DetailsPageState extends State<DetailsPage> {
       ),
       extendBody: true,
       extendBodyBehindAppBar: true,
-      body: Center(
+      body:  _isLoading
+          ? const Center(child: CircularProgressIndicator())
+       : Center(
         child: Container(
           height: size.height,
           width: size.height,
@@ -221,7 +268,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           ),
                           const Spacer(),
                           Text(
-                            '${widget.carPrice}\$',
+                            '${widget.carPrice}\FCFA',
                             style: GoogleFonts.poppins(
                               color: isDarkMode
                                   ? Colors.white
@@ -252,20 +299,20 @@ class _DetailsPageState extends State<DetailsPage> {
                             buildStat(
                               UniconsLine.dashboard,
                               '${widget.carPower} KM',
-                              'Power',
+                              'Puissance',
                               size,
                               isDarkMode,
                             ),
                             buildStat(
                               UniconsLine.users_alt,
-                              'People',
+                              'Passagers',
                               '( ${widget.people} )',
                               size,
                               isDarkMode,
                             ),
                             buildStat(
                               UniconsLine.briefcase,
-                              'Bags',
+                              'Bagages',
                               '( ${widget.bags} )',
                               size,
                               isDarkMode,
@@ -278,7 +325,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           vertical: size.height * 0.03,
                         ),
                         child: Text(
-                          'Vehicle Location',
+                          'Emplacement de la voiture',
                           style: GoogleFonts.poppins(
                             color: isDarkMode
                                 ? Colors.white
@@ -289,6 +336,10 @@ class _DetailsPageState extends State<DetailsPage> {
                         ),
                       ),
                       Center(
+                         child: GestureDetector(
+                            onTap: () {
+                              Get.to(() => Fullscreenmap(carLocation: _carLocation));
+                            },
                         child: SizedBox(
                           height: size.height * 0.15,
                           width: size.width * 0.9,
@@ -322,7 +373,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                         size: size.height * 0.05,
                                       ),
                                       Text(
-                                        'Katowice Airport',
+                                        widget.companyName,
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.poppins(
                                           color: isDarkMode
@@ -346,27 +397,43 @@ class _DetailsPageState extends State<DetailsPage> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(
-                                  height: size.height * 0.17,
-                                  width: size.width * 0.29,
-                                  child: GoogleMap(
-                                    mapType: MapType.hybrid,
-                                    onMapCreated: _onMapCreated,
-                                    initialCameraPosition: const CameraPosition(
-                                      target: _center,
-                                      zoom: 13.0,
-                                    ),
-                                    onTap: (latLng) => Get.to(const Maps()),
-                                    zoomControlsEnabled: false,
-                                    scrollGesturesEnabled: true,
-                                    zoomGesturesEnabled: true,
-                                  ),
-                                ),
+                                ClipRRect(
+                                      borderRadius: BorderRadius.circular(10), // Ajout d'un arrondi pour un meilleur style
+                                      child: SizedBox(
+                                        height: size.height * 0.18, // Ajustement pour éviter l'overflow
+                                        width: size.width * 0.4,
+                                        child: GoogleMap(
+                                          onMapCreated: (GoogleMapController controller) {
+                                            mapController = controller;
+                                          },
+                                          initialCameraPosition: CameraPosition(
+                                            target: _carLocation,
+                                            zoom: 15.0,
+                                          ),
+                                          markers: {
+                                            Marker(
+                                              markerId: MarkerId('carLocation'),
+                                              position: _carLocation,
+                                              infoWindow: InfoWindow(title: "Localisation actuelle"),
+                                            ),
+                                          },
+                                          
+                                          zoomControlsEnabled: false,
+                                          scrollGesturesEnabled: false, // Désactiver les interactions sur la mini-map
+                                          ),
+                                        ),
+                                      ),
+
                               ],
                             ),
+                            
                           ),
                         ),
+                         ),
                       ),
+
+
+
                     ],
                   ),
                   buildSelectButton(context, size, isDarkMode, this),
@@ -418,7 +485,7 @@ class _DetailsPageState extends State<DetailsPage> {
                     title,
                     style: GoogleFonts.poppins(
                       color: isDarkMode ? Colors.white : Colors.black,
-                      fontSize: size.width * 0.05,
+                      fontSize: size.width * 0.035,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -441,6 +508,50 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 }
+
+
+
+Future<void> showConfirmationDialog(
+    BuildContext context, _DetailsPageState state) async {
+  
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // L'utilisateur doit choisir une option
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirmation'),
+        content: const Text("Voulez-vous vraiment procéder à l'emprunt de cette voiture ?"),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Fermer la boîte de dialogue
+            },
+            child: const Text('Non'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop(); // Fermer la boîte de dialogue
+
+              // Rediriger vers la page de paiement avec les informations de voiture
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PaymentPage(
+                    carName: state.widget.carName,
+                    carPrice: state.widget.carPrice,
+                    carLocation: "Katowice Airport",
+                  ),
+                ),
+              );
+            },
+            child: const Text('Oui'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 Align buildSelectButton(
     BuildContext context, Size size, bool isDarkMode, _DetailsPageState state) {
   return Align(
@@ -453,38 +564,8 @@ Align buildSelectButton(
         height: size.height * 0.07,
         width: size.width,
         child: InkWell(
-          onTap: () async {
-            try {
-              // Enregistrer les données de la voiture choisie
-              await state.rentCar(
-                carId: state.widget.carName, // Remplace par l'identifiant unique
-                carName: state.widget.carName,
-                carLocation: "Katowice Airport", // Modifier si nécessaire
-                carPrice: state.widget.carPrice,
-              );
-
-              // Afficher une notification de succès
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Emprunt réalisé avec succès!',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            } catch (e) {
-              // Afficher une notification d'erreur
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Échec de l\'emprunt : $e',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
+          onTap: () {
+            showConfirmationDialog(context,state);
           },
           child: Container(
             decoration: BoxDecoration(
@@ -508,8 +589,3 @@ Align buildSelectButton(
     ),
   );
 }
-
-
-
-
-

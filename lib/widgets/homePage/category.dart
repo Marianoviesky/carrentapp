@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
-Row buildCategory(String text, size, isDarkMode) {
+Row buildCategory(String text, size, isDarkMode, Widget Redirect) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -24,7 +25,12 @@ Row buildCategory(String text, size, isDarkMode) {
         padding: EdgeInsets.only(
           top: size.height * 0.03,
           right: size.width * 0.05,
+          
         ),
+        child: GestureDetector(
+          onTap: () {
+            Get.to(Redirect);
+          },
         child: Text(
           'Tous voir',
           textAlign: TextAlign.center,
@@ -35,6 +41,7 @@ Row buildCategory(String text, size, isDarkMode) {
             fontSize: size.width * 0.04,
           ),
         ),
+      ),
       ),
     ],
   );

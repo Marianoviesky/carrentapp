@@ -1,9 +1,12 @@
 import 'package:carrentapp/pages/home_page.dart';
 import 'package:carrentapp/pages/profile_page.dart';
+import 'package:carrentapp/pages/explorer_Page.dart';
+import 'package:carrentapp/pages/searchPage.dart';
 import 'package:carrentapp/widgets/bottom_nav_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unicons/unicons.dart';
+
 
 Widget buildBottomNavBar(int currIndex, Size size, bool isDarkMode) {
   return BottomNavigationBar(
@@ -20,6 +23,12 @@ Widget buildBottomNavBar(int currIndex, Size size, bool isDarkMode) {
       if (value != currIndex) {
         if (value == 0) {
           Get.off(const HomePage());
+        }
+         if (value == 1) {
+          Get.off(ExplorerPage());
+        }
+         if (value == 2) {
+          Get.to(SearchPage());
         }
         if (value == 3) {
           Get.to(const ProfilePage());
