@@ -39,7 +39,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
         centerTitle: true,
       
       ),
-      bottomNavigationBar: buildBottomNavBar(1, size, isDarkMode),
+      bottomNavigationBar: buildBottomNavBar(context,1, size, isDarkMode),
 
       body: Column(
         children: [

@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:unicons/unicons.dart';
 
 
-Widget buildBottomNavBar(int currIndex, Size size, bool isDarkMode) {
+Widget buildBottomNavBar(BuildContext context,int currIndex, Size size, bool isDarkMode) {
   return BottomNavigationBar(
     iconSize: size.width * 0.07,
     elevation: 0,
@@ -19,22 +19,35 @@ Widget buildBottomNavBar(int currIndex, Size size, bool isDarkMode) {
     type: BottomNavigationBarType.fixed,
     selectedItemColor: isDarkMode ? Colors.indigoAccent : Colors.blue,
     unselectedItemColor: const Color.fromARGB(255, 9, 9, 10),
-    onTap: (value) {
-      if (value != currIndex) {
-        if (value == 0) {
-          Get.off(const HomePage());
-        }
-         if (value == 1) {
-          Get.off(ExplorerPage());
-        }
-         if (value == 2) {
-          Get.to(SearchPage());
-        }
-        if (value == 3) {
-          Get.to(const ProfilePage());
-        }
-      }
-    },
+   onTap: (value) {
+  if (value != currIndex) {
+    if (value == 0) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    }
+    if (value == 1) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ExplorerPage()),
+      );
+    }
+    if (value == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SearchPage()),
+      );
+    }
+    if (value == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
+      );
+    }
+  }
+},
+
     items: [
       buildBottomNavItem(
         UniconsLine.home_alt,

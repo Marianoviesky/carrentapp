@@ -149,7 +149,7 @@ void _incrementCounter() {
         centerTitle: true,
       
       ),
-      bottomNavigationBar: buildBottomNavBar(1, size, isDarkMode),
+      bottomNavigationBar: buildBottomNavBar(context,1, size, isDarkMode),
 
       body: Center(
         // Center is a layout widget. It takes a single child and positions it

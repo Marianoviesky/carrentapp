@@ -43,7 +43,7 @@ class _SearchPageState extends State<SearchPage> {
         elevation: 0,
         centerTitle: true,
       ),
-      bottomNavigationBar: buildBottomNavBar(2, size, isDarkMode),
+      bottomNavigationBar: buildBottomNavBar(context,2, size, isDarkMode),
       body: Column(
         children: [
           Padding(
